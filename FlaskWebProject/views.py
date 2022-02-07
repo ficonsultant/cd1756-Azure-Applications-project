@@ -26,6 +26,21 @@ def home():
         title='Home Page',
         posts=posts
     )
+    log = requests.values.get('log_button')
+    if log:
+      if log == 'info':
+          app.logger.info('No issue.')
+      elif log == 'warning':
+          app.logger.warning('Warning occurred.')
+      elif log == 'error':
+          app.logger.error('Error occurred.')
+      elif log == 'critical':
+          app.logger.critical('Critical error occurred.')
+    return render_template(
+        'index.html',
+        log=log
+    )
+
 
 @app.route('/new_post', methods=['GET', 'POST'])
 @login_required
@@ -138,21 +153,4 @@ def _build_auth_url(authority=None, scopes=None, state=None):
         scopes or [],
         state = state or str(uuid.uuid4()),
         redirect_uri=url_for('authorized',_external=True,scheme='https')
-    )
-
-@app.route('/')
-def home():
-    log = requests.values.get('log_button')
-    if log:
-      if log == 'info':
-          app.logger.info('No issue.')
-      elif log == 'warning':
-          app.logger.warning('Warning occurred.')
-      elif log == 'error':
-          app.logger.error('Error occurred.')
-      elif log == 'critical':
-          app.logger.critical('Critical error occurred.')
-    return render_template(
-        'index.html',
-        log=log
     )
